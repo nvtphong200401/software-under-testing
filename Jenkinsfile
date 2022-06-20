@@ -9,17 +9,17 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                bat npm run unit_test
+                npm run unit_test
             }
         }
         stage('Integration Test') {
             steps {
-                bat npm run integration_test
+                npm run integration_test
             }
         }
         stage('Deploy') {
             steps {
-                
+                echo 'deploying...'
             }
         }
     }
