@@ -1,0 +1,173 @@
+{{#section 'js'}}
+<script>
+    $('#man_category').addClass('list-group-item-primary');
+    var perfEntries = performance.getEntriesByType("navigation");
+    if (perfEntries[0].type === "back_forward") {
+        location.reload(true);
+    }
+
+</script>
+{{/section}}
+<div class="card border-success">
+    <div class="card-header p-4" style="background-color: #eff5e9;">
+        <div class="d-flex justify-content-between">
+            <div><i class="fa fa-list" aria-hidden="true"></i> Category management</div>
+            <div><a class="btn btn-sm btn-success" onclick="toggleModal()" href="javascript:;"
+                    role="button">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    Add category
+                </a>
+            </div>
+        </div>
+        <div class="modal fade" id="addCat" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add category</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formAdd" method="post" action="./category/add">
+                            <div class="form-group">
+                                <input type="text" name="CatName" class="form-control" placeholder="Category name"
+                                    aria-describedby="helpId">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:$('#formAdd').submit();" role="button" class="btn btn-success btn-sm"><i
+                                class="fa fa-floppy-o" aria-hidden="true"></i> Save</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="editCat" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit category</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEdit" method="put">
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Category ID</span>
+                                </div>
+                                <input id="EditCatID" class="form-control" type="text" name="CatID" class="form-control"
+                                    aria-describedby="helpId" readonly>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Category name</span>
+                                </div>    
+                                <input id="EditCatName" class="form-control" type="text" name="CatName" class="form-control"
+                                    aria-describedby="helpId">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="SaveCat()" class="btn btn-success btn-sm" data-dismiss="modal"><i
+                                class="fa fa-floppy-o" aria-hidden="true" ></i> Save</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="catTable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="w-25 text-center">ID</th>
+                    <th scope="col" class="w-50">Category name</th>
+                    <th scope="col" class="w-10 text-center">Edit</th>
+                    <th scope="col" class="w-10 text-center">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each this.cates}}
+                <tr class="row-{{CatID}}">
+                    <th scope="row" class="text-center">{{CatID}}</th>
+                    <td class="CatName">
+                        {{#if CatParent}}
+                        {{CatName}}
+                        {{else}}
+                        <a href="./category/{{CatID}}/" class="text-success">{{CatName}}</a>
+                        {{/if}}
+                    </td>
+                    <td class="text-center">
+                        <a onclick="Edit(this)" class="edit btn btn-warning btn-sm shadow" href="#"
+                            role="button"><i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                    </td>
+                    <td class="text-center">
+                        {{#if deletable}}
+
+                        {{else}}
+
+                        <button onclick="DeleteCat(this, {{CatID}})" class="delete btn btn-danger btn-sm shadow" href="#"
+                            role="button"><i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                            {{/if}}
+                    </td>
+                </tr>
+                {{!-- <tr class="row-{{CatID}}" style="display: none;">
+                    <form class="form-inline">
+                        <th scope="row">
+                            <div class="form-group">
+                                <input type="text" name="CatID" id="CatID" class="form-control" placeholder="{{CatID}}"
+                                    value="{{CatID}}" aria-describedby="helpId" disabled>
+                            </div>
+                        </th>
+                        <td class="CatName">
+                            <div class="form-group">
+                                <input type="text" class="form-control" value="{{CatName}}" name="CatName"
+                                    placeholder="{{CatName}}" aria-describedby="helpId">
+                            </div>
+                        <td class="text-right">
+                            <button onclick="Save({{CatID}})" class="save btn btn-success btn-sm shadow"
+                                role="button"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                Save</button>
+                            <a onclick="Cancel({{CatID}})" class="cancel btn btn-danger btn-sm shadow" href="#"
+                                role="button"><i class="fa fa-times" aria-hidden="true"></i>
+                                Cancel</a>
+                        </td>
+                        </td>
+                    </form>
+                </tr> --}}
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <span class="card-footer">
+        {{#if this.has_pre}}
+        <button onclick="history.back()" class="btn btn-success float-left" role="button">Go back</button>
+        {{/if}}
+
+
+        {{!-- <nav class="d-flex justify-content-center" aria-label="Page navigation">
+            <ul class="pagination text-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav> --}}
+    </span>
+</div>

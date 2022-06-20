@@ -1,0 +1,175 @@
+{{#section 'js'}}
+<script>
+    $('#man_user').addClass('list-group-item-primary');
+</script>
+{{/section}}
+<div class="card border-success">
+    <div class="card-header p-4" style="background-color: #eff5e9;">
+        <i class="fa fa-user" aria-hidden="true"></i> User management
+        <span class="float-right">
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle small" type="button" data-toggle="dropdown"><i
+                        class="fa fa-filter" aria-hidden="true"></i> Filter
+                </button>
+                <ul class="dropdown-menu text-center">
+                    <li>
+                        <a href="http://localhost:3000/admin/user/?filter=All" class="text-success"> <i class="fa fa-user"
+                                                                                   aria-hidden="true"></i> All</a>
+                    </li>
+                    <li>
+                        <a href="http://localhost:3000/admin/user/?filter=Bidder" class="text-success"><i class="fa fa-gavel"
+                                                                                     aria-hidden="true"></i> Bidder</a>
+                    </li>
+                    <li><a href="http://localhost:3000/admin/user/?filter=Seller" class="text-success"><i class="fa fa-user-secret"
+                                                                                     aria-hidden="true"></i> Seller</a></li>
+                </ul>
+            </div>
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="modal fade" id="resetUser" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Reset user's password</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        New password has sent ! Check it in the email !
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{!-- <div class="modal fade" id="editUser" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEdit" method="put">
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">User ID</span>
+                                </div>
+                                <input id="EditUserID" class="form-control" type="text" name="UserID" class="form-control"
+                                    aria-describedby="helpId" readonly>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Username</span>
+                                </div>    
+                                <input id="EditUsername" class="form-control" type="text" name="Username" class="form-control"
+                                    aria-describedby="helpId">
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Email</span>
+                                </div>    
+                                <input id="EditEmail" class="form-control" type="text" name="Email" class="form-control"
+                                    aria-describedby="helpId">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="SaveUser()" class="btn btn-success btn-sm" data-dismiss="modal"><i
+                                class="fa fa-floppy-o" aria-hidden="true" ></i> Save</button>
+                    </div>
+                </div>
+
+            </div>
+        </div> --}}
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col" class="w-25 text-center">ID</th>
+                <th scope="col" class="w-25">Username</th>
+                <th scope="col" class="w-25">Email</th>
+                <th scope="col" class="text-center w-25">Role</th>
+                <th scope="col" class="text-center w-25">Password</th>
+                <th scope="col" class="text-center">Ban/unban</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this.users}}
+                <tr class="row-{{ID}}">
+                    <th class="UserID text-center" scope="row">{{ID}}</th>
+                    <td class="Username">{{Username}}</td>
+                    <td class="Email">{{Email}}</td>
+                    {{#if Role}}
+                        <td class="text-center">
+                            <button onclick="toBidder(this, {{ID}})" class="btn btn-secondary btn-sm shadow"><i
+                                    class="fa fa-arrow-down mr-1" aria-hidden="true"></i>Bid
+                            </button>
+                        </td>
+                    {{else}}
+                        <td class="text-center">
+                            <button onclick="toSeller(this, {{ID}})" class="btn btn-info btn-sm shadow"><i
+                                    class="fa fa-arrow-up mr-1" aria-hidden="true"></i>Sell
+                            </button>
+                        </td>
+                    {{/if}}
+                    <td class="text-center">
+                        <button onclick="ResetPassword(this)" class="btn btn-warning btn-sm shadow"><i
+                                class="fa fa-refresh" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        {{#if isBanned}}
+                            <button onclick="Unban(this, {{ID}})" class="btn btn-success btn-sm shadow"><i
+                                    class="fa fa-check" aria-hidden="true"></i>
+                            </button>
+                        {{else}}
+                            <button onclick="Ban(this, {{ID}})" class="btn btn-danger btn-sm shadow"><i class="fa fa-ban"
+                                                                                                        aria-hidden="true"></i>
+                            </button>
+                        {{/if}}
+                    </td>
+                </tr>
+            {{!-- <tr class="row-{{ID}}" style="display: none;">
+                <form class="form-inline">
+                    <th scope="row">
+                        <div class="form-group">
+                            <input type="text" name="ID" id="ID" class="form-control" placeholder="{{ID}}"
+                                value="{{ID}}" aria-describedby="helpId" disabled>
+                        </div>
+                    </th>
+                    <td class="Username">
+                        <div class="form-group">
+                            <input type="text" class="form-control" value="{{Username}}" name="Username"
+                                placeholder="{{Username}}" aria-describedby="helpId">
+                        </div>
+                    </td>
+                    <td class="Email">
+                        <div class="form-group">
+                            <input type="text" class="form-control" value="{{Email}}" name="Email"
+                                placeholder="{{Email}}" aria-describedby="helpId">
+                        </div>
+                    </td>
+                    <th class="Role">
+                        <div class="form-group">
+                            <input type="text" name="Role" id="Role" class="form-control" placeholder="{{Role}}"
+                                value="Seller" aria-describedby="helpId" disabled>
+                        </div>
+                    </th>
+                    <td class="text-right">
+                        <button onclick="SaveUser({{ID}})" class="save btn btn-success btn-sm shadow"
+                            role="button"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            Save</button>
+                        <a onclick="Cancel({{ID}})" class="cancel btn btn-danger btn-sm shadow" href="#"
+                            role="button"><i class="fa fa-times" aria-hidden="true"></i>
+                            Cancel</a>
+                    </td>
+                </form>
+            </tr> --}}
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

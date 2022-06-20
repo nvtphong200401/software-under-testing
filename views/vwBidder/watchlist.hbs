@@ -1,0 +1,176 @@
+{{#section 'css'}}
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./public/css/watchlist.css">
+{{/section}}
+
+{{#section 'js'}}
+    <script>
+        $('.delItem').on('click', function (e) {
+            const id = $(this).data('id');
+            deleteCart(id);
+
+            // fade out
+            $(this).closest('tr').find('td').fadeOut('slow',
+                    function(here){
+                        $(here).parents('tr:first').remove();
+                    });
+            return false;
+        });
+    </script>
+{{/section}}
+
+<div class="container mt-5">
+    <div class="row flex-lg-nowrap">
+        <div class="col-12 col-lg-auto mb-3" style="width: 200px;">
+            <div class="list-group">
+                <a href="/bidder/profile" class="list-group-item list-group-item-action">
+                    <i class="fa fa-fw fa-bar-chart mr-1"></i><span>Overview</span>
+                </a>
+                <a href="javascript:" class="list-group-item list-group-item-action active">
+                    <i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i><span>Watchlist</span></a>
+                <a href="/bidder/profile/edit" class="list-group-item list-group-item-action">
+                    <i class="fa fa-fw fa-cog mr-1"></i><span>Settings</span></a>
+                <a href="/bidder/product/list/active" class="list-group-item list-group-item-action">
+                    <i class="fa fa-fw fa-history mr-1"></i><span>History</span></a>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="e-profile">
+                                <div class="row">
+                                    <div class="col-12 col-sm-auto mb-3">
+                                        <div class="mx-auto" style="width: 140px;">
+                                            <div class="d-flex justify-content-center align-items-center rounded"
+                                                 style="height: 140px; background-color: rgb(233, 236, 239);">
+                                                <img src="/public/imgs/avatar/0/avatar1.png" class="img-thumbnail"
+                                                     alt="profile-image">
+
+                                                <!--<span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                                        <div class="text-center text-sm-left mb-2 mb-sm-0">
+                                            <a class="text-dark" href="/bidder/profile"><h4
+                                                    class="pt-sm-2 pb-1 mb-0 text-nowrap">{{authUser.FullName}}</h4></a>
+                                            <p class="mb-0">@{{authUser.Username}}</p>
+                                            <div class="text-muted"><small>{{authUser.Email}}</small></div>
+                                            <div class="text-muted"><small>{{format_date authUser.DOB}}</small></div>
+
+                                        </div>
+                                        <div class="text-center text-sm-right">
+                                            {{#if authUser.Role}}
+                                                <span class="badge badge-secondary">
+                                                    bidder/seller
+                                                </span>
+                                                <div class="text-muted"><small>Ready to sell!</small></div>
+                                            {{else}}
+                                                <span class="badge badge-secondary">
+                                                    bidder
+                                                </span>
+                                                <div class="text-muted"><small>You are currently a bidder!</small></div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            {{#if empty}}
+                                                <div class="card-body cart">
+                                                    <div class="col-sm-12 empty-cart-cls text-center"><img
+                                                            src="https://i.imgur.com/dCdflKN.png" width="130"
+                                                            height="130"
+                                                            class="img-fluid mb-4 mr-3">
+                                                        <h3><strong>Your Cart is Empty</strong></h3>
+                                                        <h4>Add something to make me happy :)</h4>
+                                                        <a href="/"
+                                                           class="btn btn-outline-success cart-btn-transform m-3"
+                                                           data-abc="true">
+                                                            Continue shopping</a>
+                                                    </div>
+                                                </div>
+                                            {{else}}
+                                                 <div class="container padding-bottom-3x mb-1">
+                                                    <!-- Shopping Cart-->
+                                                    <div class="table-responsive shopping-cart">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Product Name</th>
+                                                                <th class="text-center">Highest bid</th>
+                                                                <th class="text-center">Buy now</th>
+                                                                <th class="text-center">Delete</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {{#each this.items}}
+                                                                <tr class=".section-cart">
+                                                                    <td>
+                                                                        <div class="product-item">
+                                                                            <a class="product-thumb"
+                                                                               href="http://localhost:3000/product/{{ProID}}"><img
+                                                                                    src="/public/imgs/sp/{{ProID}}/main_thumbs.jpg"
+                                                                                    alt="Product"></a>
+                                                                            <div class="product-info">
+                                                                                <h4 class="product-title"><a
+                                                                                        href="http://localhost:3000/product/{{ProID}}">
+                                                                                    {{ProName}}
+                                                                                </a></h4>
+                                                                                <span class="text-muted">{{TinyDesc}}</span>
+                                                                                <span class="text-muted">End date: <strong>{{format_date_calendar
+                                                                                        EndDate}}</strong></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center text-success">
+                                                                        <strong>{{format_number
+                                                                                Current_bid}}</strong>
+                                                                    </td>
+                                                                    {{#if Buy_now}}
+                                                                        <td class="text-center text-info">
+                                                                            <strong>{{format_number Buy_now}}</strong>
+                                                                        </td>
+                                                                    {{else}}
+                                                                        <td class="text-center text-info">—</td>
+                                                                    {{/if}}
+
+                                                                    <td class="text-center">
+                                                                        <a data-id="{{ProID}}"
+                                                                           class="btn btn-light remove-from-cart delItem"
+                                                                           id="section-cart__delete"
+                                                                           href="javascript:"
+                                                                           data-toggle="tooltip"
+                                                                           title=""
+                                                                           data-original-title="Remove item"><i
+                                                                                class="fa fa-trash"></i></a></td>
+                                                                </tr>
+                                                            {{/each}}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="shopping-cart-footer">
+                                                        <div class="column"><a class="btn btn-outline-success"
+                                                                               href="/">
+                                                            <i class="icon-arrow-left"></i>&nbsp;Back to Shopping</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

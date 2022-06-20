@@ -1,0 +1,170 @@
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+
+
+<form class="show1" method="post">
+  <input type="hidden" name="action" value="Login">
+  {{#if err_message}}
+  <div class="alert alert-warning" role="alert">
+    {{err_message}}
+    {{#if re_verify}}
+    <a href="javascript:;" id="verifyEmail"> Click here</a> to verify
+    {{/if}}
+  </div>
+
+  {{/if}}
+  {{#if success}}
+  <div class="alert alert-success" role="alert">
+    {{success}}
+  </div>
+  {{/if}}
+  {{#if warning}}
+  <div class="alert alert-warning" role="alert">
+    <strong>{{warning}}</strong>
+  </div>
+  {{/if}}
+  {{!-- Username --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-user-circle" aria-hidden="true"></i></span>
+    </div>
+    <input type="text" class="form-control" placeholder="Username" name="username">
+  </div>
+
+  {{!-- Password --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+    </div>
+    <input type="password" class="form-control" placeholder="Password" name="password">
+  </div>
+
+  <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input">
+    <span class="form-check-label" for="remember">Remember me</span>
+    <span class="ml-4">
+      <a href="#" class="text-success" id="get-new-password">Forgot your password?</a>
+    </span>
+  </div>
+
+  <div style="text-align: center;">
+    <button type="submit" class="btn btn-success">Login</button>
+  </div>
+
+  <div class="other text-center">
+    <div class="mt-2">
+      or
+    </div>
+    <div class="mt-2">
+      <a href="./facebook" class="fb btn">
+        <i class="fa fa-facebook-square" aria-hidden="true"></i> Login with Facebook
+      </a>
+    </div>
+    <div class="mt-1">
+      <a href="./google" class="google btn">
+        <i class="fa fa-google-plus" aria-hidden="true"></i> Login with Google+
+      </a>
+    </div>
+    <div class="d-flex justify-content-center mt-2">
+      Don't have an account? <a href="#" class="ml-2 text-success" id="register">Sign Up</a>
+    </div>
+  </div>
+</form>
+
+{{!-- Verify Email --}}
+<form class="show4" action="/auth/sendverify" method="post" style="display: none;">
+  <input type="hidden" name="action" value="Reverify">
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+    </div>
+    <input type="email" class="form-control" placeholder="Email" name="Email">
+  </div>
+  <center>
+    <button type="submit" class="btn btn-primary">Verify Email</button>
+  </center>
+  <div class="d-flex justify-content-center mt-4" id="goback4">
+    <a href="#" class="ml-2">Go back</a>
+  </div>
+</form>
+{{!-- Request new password --}}
+<form class="show2" style="display: none;" action="/auth/requestNewPassword" method="post">
+
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+    </div>
+    <input type="email" class="form-control" placeholder="Email" name="Email">
+  </div>
+  <center>
+    <button type="submit" class="btn btn-success">Reset password</button>
+  </center>
+  <div class="d-flex justify-content-center mt-2" id="goback"> Want to try again?
+    <a href="#" class="ml-2 text-success">Go back</a>
+  </div>
+</form>
+
+{{!-- Register --}}
+<form onsubmit="return registerSubmit(event);" class="show3 needs-validation" method="post" style="display: none;">
+  <input type="hidden" name="action" value="Register">
+  {{!-- Username --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-user-circle" aria-hidden="true"></i></span>
+    </div>
+    <input type="text" class="form-control" placeholder="Username" name="username" id="txtUsername" required>
+  </div>
+  {{!-- Full name --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+    </div>
+    <input type="text" class="form-control" placeholder="Full name" name="fullname" id="txtFullname" required>
+  </div>
+  {{!-- Email --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+    </div>
+    <input type="email" class="form-control" placeholder="Email" name="email" id="txtEmail" required>
+  </div>
+  {{!-- Password --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+    </div>
+    <input type="password" class="form-control" placeholder="Password" name="password" id="txtPassword" required>
+  </div>
+
+  {{!-- Re-enter password --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+    </div>
+    <input type="password" class="form-control" placeholder="Re-enter Password" id="txtRePassword" required>
+  </div>
+
+  {{!-- DOB --}}
+  <div class="form-group input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+    </div>
+    <input type="text" class="form-control" id="txtDOB" name="dob" id="txtDOB" required>
+  </div>
+  {{!-- captcha --}}
+  <div class="form-group">
+    <div class="g-recaptcha" data-sitekey="6LeQeVkdAAAAAETp3LBvY2nsOHF0ZFObrGYWe-_o"></div>
+  </div>
+
+  <center>
+    <button type="submit" class="btn btn-success">Register</button>
+  </center>
+  <div class="mt-2">
+    <div class="d-flex justify-content-center">
+      Have an account? <a href="#" class="ml-2 text-success" id="gobackLog">Login</a>
+    </div>
+  </div>
+</form>

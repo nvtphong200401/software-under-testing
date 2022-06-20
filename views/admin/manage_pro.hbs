@@ -1,0 +1,37 @@
+{{#section 'js'}}
+<script>
+    $('#man_product').addClass('list-group-item-primary');
+</script>
+{{/section}}
+<div class="card border-success">
+    <div class="card-header p-4" style="background-color: #eff5e9;">
+        <i class="fa fa-product-hunt" aria-hidden="true"></i> Product management
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="w-25 text-center">ID</th>
+                    <th scope="col" class="w-25">Product name</th>
+                    <th scope="col" class="w-25">Upload date</th>
+                    <th scope="col" class="w-25">End date</th>
+                    <th class="text-center w-25">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each this.products}}
+                <tr class="row-{{ProID}}">
+                    <th scope="row" class="text-center">{{ProID}}</th>
+                    <td>{{ProName}}</td>
+                    <td>{{UploadDate}}</td>
+                    <td>{{EndDate}}</td>
+                    <td class="text-center">
+                        <button onclick="Delete(this, {{ProID}})" class="delete btn btn-danger btn-sm shadow" type="submit"><i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,224 @@
+{{#section 'js'}}
+    <script crossorigin="anonymous" src="/public/js/time.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            {{#each product}}
+                f('time-left-{{ProID}}', "{{EndDate}}");
+            {{/each}}
+
+        });
+    </script>
+{{/section}}
+
+<div id="main-content">
+    <!--Main Content-->
+    <!-- Category -->
+    <div class="container-fluid category">
+        <div class="row mb-3 bg-secondary">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                <ul class="nav justify-content-center">
+                    {{#each this.category}}
+                        <li class="nav-item dropdown">
+                            <a class="text-white" href="/byCat/{{CatID}}">
+                                <button class="nav-link btn btn-secondary" aria-expanded="false">
+                                    {{CatName}}
+                                </button>
+                            </a>
+
+                            <div class="dropdown-menu" style="padding:0">
+                                <div class="dropdown-menu">
+                                    {{#each SubCat}}
+                                        <a class="dropdown-item" href="/byCat/{{CatID}}">{{CatName}}</a>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End of Category -->
+
+    <!-- Item List -->
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-lg-2 col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Category</h3>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {{#each lcCategories}}
+                            <a data-toggle="collapse" href="#collapse{{CatID}}"
+                               class="list-group-item list-group-item-action {{#if isActive}} active {{/if}}">
+                                <div>
+                                    <h6 class="font-weight-bold">{{CatName}}
+                                        <i class="fa fa-list float-right mt-1" aria-hidden="true"></i>
+                                    </h6>
+                                </div>
+                            </a>
+                            <div class="collapse ml-4 mt-3" id="collapse{{CatID}}">
+                                <div class="form-check">
+                                    {{#each SubCat}}
+                                        <a href="../{{CatID}}" class="form-check-label">
+                                            {{CatName}}
+                                        </a>
+                                        <span class="badge badge-pill badge-danger">{{ProductCount}}</span>
+                                        <div class="dropdown-divider"></div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-9 col-12">
+                <div class="card">
+                    <h4 class="card-header d-flex justify-content-between">
+                        {{this.chosenCat}}
+                    </h4>
+                    <div class="card-body">
+
+                        {{#if this.empty}}
+                            <div class="text-center mb-5 mt-5">
+                                <img src="/public/imgs/picture/no-product-found.png" alt="There is no product in this category yet. <br>Please come back later
+                                :(">
+                            </div>
+                            <!--
+                                <h5 class="card-title">No product found</h5>
+                                <p class="card-text">There is no product in this category yet. <br>Please come back later
+                                    :(
+                                </p> -->
+                        {{else}}
+                            <div class="row">
+                                {{#each this.product}}
+                                    <div class="col-lg-3 col-md-4 col-12 mb-5">
+                                        <div class="card card-small h-100">
+                                            <div class="thumbnail">
+                                                <img class="card-img-top"
+                                                     src="/public/imgs/sp/{{ProID}}/main_thumbs.jpg"
+                                                     alt="{{ProName}}"
+                                                     title="{{ProName}}">
+                                                {{#if New}}
+                                                    <span class="tag-picture bg-info text-white">New</span>
+                                                {{/if}}
+                                                <div class="details">
+                                                    {{#if HighestBID}}
+                                                        <a href="/user/{{HighestBID.ID}}" class="user">
+                                                            <div class="user-photo">
+                                                                <img alt="Thumb"
+                                                                     src="/public/imgs/avatar/0/avatar1.png">
+                                                            </div>
+                                                            <div class="name" data-toggle="tooltip" data-placement="top"
+                                                                 title="{{{format_name HighestBID.FullName}}}">
+                                                                {{{format_name HighestBID.FullName}}}
+                                                            </div>
+                                                        </a>
+                                                    {{else}}
+                                                        <div class="user">
+                                                            <div class="name">No bidder!</div>
+                                                        </div>
+                                                    {{/if}}
+
+                                                    <div class="numbers">
+                                                        <b class="views mr-1"><i class="fa fa-arrow-circle-up"
+                                                                                 aria-hidden="true"></i> {{BidNumber}}
+                                                        </b>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+
+                                                <h4 class="card-title">
+                                                    <a class="text-dark" href="/product/{{ProID}}">{{ProName}}</a>
+                                                </h4>
+
+                                                <h6 class="card-title text-success">
+                                                    <i class="fa fa-money mr-2" aria-hidden="true"></i>Highest
+                                                    bid
+                                                    <h5 class="text-success">{{{format_number Current_bid}}}</h5>
+                                                </h6>
+
+
+                                                {{#if Buy_now}}
+                                                    <h6 class="card-title text-info">
+                                                        <i class="fa fa-shopping-bag mr-2" aria-hidden="true"></i>Buy
+                                                        now
+                                                        <h5 class="text-info">{{{format_number Buy_now}}}</h5>
+                                                    </h6>
+                                                {{/if}}
+
+                                                <div class="card-text">
+                                                    <h6 class="card-title">
+                                                        <i class="fa fa-clock-o mr-2" aria-hidden="true"></i>Time remain
+                                                        <h5 class="time-left-{{ProID}}"></h5>
+                                                    </h6>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="card-text mr-auto ml-3">
+                                                <a href="/product/{{ProID}}">
+                                                    <button type="button"
+                                                            class="btn btn-outline-primary my-2 ">
+                                                        <i class="fa fa-list mr-2" aria-hidden="true"></i>View Detail
+                                                    </button>
+                                                </a>
+                                                {{#if ../auth}}
+                                                    <a data-id="{{ProID}}" class="addItem my-2" href="javascript:">
+                                                        <button type="button" class="btn btn-outline-danger my-2">
+                                                            <i class="fa fa-heart mr-1" aria-hidden="true"></i>
+                                                            Add to Watchlist
+                                                        </button>
+                                                    </a>
+                                                {{/if}}
+                                            </div>
+                                            <div class="card-footer text-right mt-4">
+                                                <small class="text-muted">Uploaded: {{format_date UploadDate}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        {{/if}}
+
+                        <!-- Pagination -->
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center">
+                                {{#with prev}}
+                                    <li class="page-item {{#if disable}} disabled {{/if}}">
+                                        <a class="page-link" href="./{{index}}">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {{/with}}
+                                {{#each this.page}}
+                                    <li class="page-item {{#if active}} active {{/if}}"><a class="page-link"
+                                                                                           href="./{{index}}">{{index}}</a>
+                                    </li>
+                                {{/each}}
+                                {{#with next}}
+                                    <li class="page-item {{#if disable}} disabled {{/if}}">
+                                        <a class="page-link" href="./{{index}}">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {{/with}}
+                            </ul>
+                        </nav>
+                        <!-- End of Pagination -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Item List -->
+</div>
+<!-- End of Main Content -->
+

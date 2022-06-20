@@ -1,0 +1,244 @@
+{{#section 'css'}}
+
+{{/section}}
+
+{{#section 'js'}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/azrztam7agu8ui1d0jp84lr1lrzyuyayx0nsz6pk99l551lw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            max_chars: 801,
+            setup: function(ed) {
+                var allowedKeys = [8, 37, 38, 39, 40, 46]; // backspace, delete and cursor keys
+                ed.on('keydown', function (e) {
+                    if (allowedKeys.indexOf(e.keyCode) != -1) return true;
+                    if (tinymce_getContentLength() + 1 > this.settings.max_chars) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                    return true;
+                });
+                ed.on('keyup', function () {
+                    tinymce_updateCharCounter(this, tinymce_getContentLength());
+                });
+            },
+            init_instance_callback: function () { // initialize counter div
+                $('#rchars_full').text(tinymce.get(tinymce.activeEditor.id).settings.max_chars);
+                tinymce_updateCharCounter(this, tinymce_getContentLength());
+            },
+            paste_preprocess: function (plugin, args) {
+                var editor = tinymce.get(tinymce.activeEditor.id);
+                var len = editor.contentDocument.body.innerText.length;
+                var text = $(args.content).text();
+                if (len + text.length > editor.settings.max_chars) {
+                    alert('Pasting this exceeds the maximum allowed number of characters');
+                    args.content = '';
+                } else {
+                    tinymce_updateCharCounter(editor, len + text.length);
+                }
+            },
+            selector: '#FullDesc',
+            plugins: 'paste image link autolink lists table media',
+            menubar: false,
+            toolbar: ['undo redo | bold italic underline strikethrough | numlist bullist | alignleft aligncenter alignright | forecolor backcolor | table link media'],
+        });
+
+        function tinymce_updateCharCounter(el, len) {
+            $('#rchars_full').text(el.settings.max_chars - len);
+        }
+
+        function tinymce_getContentLength() {
+            return tinymce.get(tinymce.activeEditor.id).contentDocument.body.innerText.length;
+        }
+
+        $(function() {
+            var $form = $('#addForm'),
+                    $end_date = $('#EndDate', $form),
+                    $button = $('.submit', $form);
+            $button.prop('disabled', 'disabled');
+
+            $end_date.on('change', function () {
+                var endDate = new Date($(this).val());
+                if (endDate < Date.now()) {
+                    alert(`End date must be after the moment`);
+                    $(this).val('');
+                    $button.prop('disabled', 'disabled');
+                } else {
+                    $button.prop('disabled', false);
+                }
+            });
+        });
+
+        $(function() {
+            var max_file_number = 5,
+                    min_file_number = 3;
+            $form = $('#addForm'),
+                    $file_upload = $('#subImages', $form),
+                    $button = $('.submit', $form);
+            $button.prop('disabled', 'disabled');
+
+            $file_upload.on('change', function () {
+                var number_of_images = $(this)[0].files.length;
+                if (number_of_images > max_file_number) {
+                    alert(`You can upload maximum ${max_file_number} product images files`);
+                    $(this).val('');
+                    $button.prop('disabled', 'disabled');
+                } else if (number_of_images < min_file_number) {
+                    alert(`Product must have at least ${min_file_number} images beside the thumbnail`);
+                    $(this).val('');
+                    $button.prop('disabled', 'disabled');
+                } else {
+                    $button.prop('disabled', false);
+                }
+            });
+        });
+        $(document).ready(() => {
+            $('#Start_price').on("input", function () {
+                        $('#Start_price').val(numeral($('#Start_price').val()).format('0,0'));
+                    });
+            $('#Step_price').on("input", function () {
+                        $('#Step_price').val(numeral($('#Step_price').val()).format('0,0'));
+                    });
+            $('#Buy_now').on("input", function () {
+                    $('#Buy_now').val(numeral($('#Buy_now').val()).format('0,0'));
+                })
+        })
+
+        $(function () {
+            var maxLength = 150;
+            $('#TinyDesc').keyup(function() {
+                var textlen = maxLength - $(this).val().length;
+                $('#rchars_tiny').text(textlen);
+            });
+        });
+
+        $(function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+{{/section}}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="card my-5">
+                <h3 class="card-header">Add a new product</h3>
+                <div class="card-body">
+                    <div class="border border-secondary rounded px-5 py-5">
+                        <h5 class="card-title">Product details</h5>
+                        <hr>
+                        <form id="addForm" name="addForm" class="needs-validation" novalidate method="post" enctype="multipart/form-data">
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="ProName">Product name</label>
+                                    <input type="text" class="form-control" id="ProName" name="ProName"
+                                           placeholder="Product name"
+                                           required>
+                                    <div class="invalid-feedback">You must not leave this field blank</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="CatName">Category</label>
+                                    <select class="form-control" id="CatName" name="CatName"
+                                            required>
+                                        {{#each this.catList}}
+                                            <option>{{CatName}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="EndDate">End date</label>
+                                    <input type="datetime-local" class="form-control" id="EndDate" name="EndDate"
+                                           required>
+                                    <div class="invalid-feedback">You must not leave this field blank</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="Start_price">Start price</label>
+                                    <input type="text" min="0" class="form-control" id="Start_price" name="Start_price" placeholder="VND"
+                                           required>
+                                    <div class="invalid-feedback">Price should be a positive number</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="Step_price">Step price</label>
+                                    <input type="text" min="0" class="form-control" id="Step_price" name="Step_price" placeholder="VND"
+                                           required>
+                                    <div class="invalid-feedback">Price should be a positive number</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="Buy_now">Buy now price</label>
+                                    <input type="text" min="0" class="form-control" id="Buy_now" name="Buy_now" placeholder="VND">
+                                    <div class="invalid-feedback">Price should be a positive number</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col mb-3">
+                                    <label for="TinyDesc">Brief description</label>
+                                    <textarea rows="3" type="text" maxlength="150" class="form-control" id="TinyDesc" name="TinyDesc"
+                                              placeholder="Write an overview of your product" required></textarea>
+                                    <div class="invalid-feedback">You must not leave this field blank</div>
+                                    <div class="small text-success"><span id="rchars_tiny">150</span> character(s) remaining</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col mb-3">
+                                    <label for="FullDesc">Full description</label>
+                                    <textarea rows="10" type="text" class="form-control" id="FullDesc" name="FullDesc"
+                                              placeholder="Write in detail to describe your product" required></textarea>
+                                    <div class="invalid-feedback">You must not leave this field blank</div>
+                                    <div class="small text-success"><span id="rchars_full"></span> character(s) remaining</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="thumbnail">Main thumbnail</label>
+                                    <input type="file" id="thumbnail" name="thumbnail"
+                                           required>
+                                </div>
+                                <div class="invalid-feedback">You must provide product's main thumbnail</div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="subImages">Product images</label>
+                                    <input type="file" id="subImages" name="subImages"
+                                           required multiple>
+                                </div>
+                                <div class="invalid-feedback">You must provide at least 3 sub images for the product</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check text-left">
+                                    <input class="form-check-input" type="checkbox" value="1" id="AutoTime" name="AutoTime">
+                                    <label class="form-check-label" for="AutoTime">
+                                        Auto extend auction time
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check text-left">
+                                    <input class="form-check-input" type="checkbox" value="1" id="AllowAll" name="AllowAll">
+                                    <label class="form-check-label" for="AllowAll">
+                                        Allow all users to bid on your product
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="btn btn-success" type="submit">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

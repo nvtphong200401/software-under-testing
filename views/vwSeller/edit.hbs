@@ -1,0 +1,111 @@
+{{#section 'js'}}
+    <script src="https://cdn.tiny.cloud/1/azrztam7agu8ui1d0jp84lr1lrzyuyayx0nsz6pk99l551lw/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            max_chars: {{this.maxLength}} - 50,
+            setup: function(ed) {
+                var allowedKeys = [8, 37, 38, 39, 40, 46]; // backspace, delete and cursor keys
+                ed.on('keydown', function (e) {
+                    if (allowedKeys.indexOf(e.keyCode) != -1) return true;
+                    if (tinymce_getContentLength() + 1 > this.settings.max_chars) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                    return true;
+                });
+                ed.on('keyup', function () {
+                    tinymce_updateCharCounter(this, tinymce_getContentLength());
+                });
+            },
+            init_instance_callback: function () { // initialize counter div
+                $('#rchars').text(tinymce.get(tinymce.activeEditor.id).settings.max_chars);
+                tinymce_updateCharCounter(this, tinymce_getContentLength());
+            },
+            paste_preprocess: function (plugin, args) {
+                var editor = tinymce.get(tinymce.activeEditor.id);
+                var len = editor.contentDocument.body.innerText.length;
+                var text = $(args.content).text();
+                if (len + text.length > editor.settings.max_chars) {
+                    alert('Pasting this exceeds the maximum allowed number of characters');
+                    args.content = '';
+                } else {
+                    tinymce_updateCharCounter(editor, len + text.length);
+                }
+            },
+            selector: '#NewDesc',
+            plugins: 'paste image link autolink lists table media',
+            menubar: false,
+            toolbar: ['undo redo | bold italic underline strikethrough | numlist bullist | alignleft aligncenter alignright | forecolor backcolor | table link media'],
+        });
+
+        function tinymce_updateCharCounter(el, len) {
+            $('#rchars').text(el.settings.max_chars - len);
+        }
+
+        function tinymce_getContentLength() {
+            return tinymce.get(tinymce.activeEditor.id).contentDocument.body.innerText.length;
+        }
+    </script>
+{{/section}}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="card my-5">
+                <h3 class="card-header">Edit description</h3>
+                {{#if this.empty}}
+                    <div class="card-body">
+                        <h5 class="card-title text-warning">No information about this product</h5>
+                        <p class="card-text">Please select an existing product to edit description.</p>
+                    </div>
+                {{else}}
+                    <div class="card-body">
+                        <div class="border border-secondary rounded px-5 py-5">
+                            <h5 class="card-title">Current description</h5>
+                            <hr>
+                            <div class="col mb-3">
+                                {{{this.product.FullDesc}}}
+                            </div>
+                            <h5 class="card-title">New description</h5>
+                            <hr>
+                            <form id="editForm" name="editForm" class="needs-validation" novalidate method="post">
+                                <div class="form-row">
+                                    <div class="col mb-3">
+                                        <label for="ProID" hidden>ProID</label>
+                                        <input type="text" class="form-control" id="ProID" name="ProID" value="{{this.product.ProID}}" hidden>
+                                        <label for="NewDesc">New description will be appended to the current one</label>
+                                        <textarea rows="10" type="text" class="form-control" id="NewDesc" name="NewDesc"
+                                                  placeholder="Write some additional information to describe your product" required></textarea>
+                                        <div class="invalid-feedback">You must not leave this field blank</div>
+                                        <div class="small text-success"><span id="rchars"></span> character(s) remaining</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success" type="submit" formaction="/seller/product/edit">Confirm</button>
+                            </form>
+                            <script>
+                                (function() {
+                                    'use strict';
+                                    window.addEventListener('load', function() {
+                                        var forms = document.getElementsByClassName('needs-validation');
+                                        // Loop over them and prevent submission
+                                        var validation = Array.prototype.filter.call(forms, function(form) {
+                                            form.addEventListener('submit', function(event) {
+                                                if (form.checkValidity() === false) {
+                                                    event.preventDefault();
+                                                    event.stopPropagation();
+                                                }
+                                                form.classList.add('was-validated');
+                                            }, false);
+                                        });
+                                    }, false);
+                                })();
+                            </script>
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
