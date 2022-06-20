@@ -5,8 +5,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "node ./node_modules/jest/bin/jest.js --coverage",
     "start": "node app",
+    "unit_test": "mocha unit_test",
+    "integration_test": "mocha integration_test",
     "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
     "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;"
   },
@@ -32,6 +33,7 @@
     "express-pg-session": "^1.1.0",
     "express-session": "^1.17.2",
     "knex": "^0.95.14",
+    "mocha": "^10.0.0",
     "moment": "^2.29.1",
     "mongoose": "^6.0.14",
     "multer": "^1.4.4",
