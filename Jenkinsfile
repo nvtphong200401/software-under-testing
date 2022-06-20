@@ -4,17 +4,17 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                npm install
+                bat 'npm install'
             }
         }
         stage('Unit Test') {
             steps {
-                npm run unit_test
+                bat 'npm run unit_test'
             }
         }
         stage('Integration Test') {
             steps {
-                npm run integration_test
+                bat 'npm run integration_test'
             }
         }
         stage('Deploy') {
