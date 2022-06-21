@@ -24,6 +24,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bootstrap-fileinput": "^5.2.6",
+    "cheerio": "^1.0.0-rc.11",
     "express": "^4.17.1",
     "express-flash": "^0.0.2",
     "express-handlebars": "^6.0.1",
@@ -45,6 +46,7 @@
     "passport-google-oauth2": "^0.2.0",
     "pg": "^8.7.1",
     "rand-token": "^1.0.1",
+    "request": "^2.88.2",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
