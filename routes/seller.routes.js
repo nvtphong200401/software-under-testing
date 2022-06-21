@@ -1,8 +1,9 @@
 import express from 'express';
 import fs from  'fs';
 import moment from 'moment';
-import multer from 'multer';
 import nodemailer from 'nodemailer';
+import numeral from 'numeral';
+import multer from 'multer';
 
 import productModel from "../models/product.model.js";
 import categoryModel from "../models/category.model.js";
@@ -10,7 +11,6 @@ import userModel from "../models/users_model.js";
 import commentModel from "../models/comment.model.js";
 import bidModel from "../models/bid.model.js";
 import auth from "../middleware/auth.mdware.js";
-import numeral from 'numeral';
 
 const router = express.Router();
 
