@@ -4,12 +4,17 @@ import routesMdware from './middleware/routes.mdware.js';
 import localMdware from "./middleware/locals.mdware.js";
 import sessionMdware from "./middleware/session.mdware.js";
 import flash from 'express-flash';
-import http from 'http';
 import chai from 'chai';
 const expect = chai.expect;
-import request from 'supertest';
+<<<<<<< HEAD
+import supertest from 'supertest';
 import { doesNotMatch } from 'assert';
+=======
+import request from 'supertest';
+>>>>>>> f080fd011b0b271af04434d04e1fa52fa52bff0e
 import { exit } from 'process';
+import  request  from 'request';
+import cheerio from 'cheerio';
 
 
 const app = express();
@@ -35,18 +40,18 @@ const server = app.listen(port, () => {
 describe('Our application', function() {
 
     it('should see home page', function(done) {
-      request(app).get('/').expect(200).end((err, res) => done())
+      supertest(app).get('/').expect(200).end((err, res) => done())
     });
 
     it('should see 404', function(done) {
-        request(app)
+        supertest(app)
         .get('/asd')
         .expect(404)
         .end((err, res) => done())
     })
 
     it('admin should be redirect', function(done) {
-        request(app)
+        supertest(app)
         .get('/admin/product')
         .expect(302)
         .end((err, res) => {
@@ -56,13 +61,31 @@ describe('Our application', function() {
     })
 
     it('seller should be redirect', function(done) {
-        request(app)
+        supertest(app)
         .get('/seller/')
         .expect(302)
         .end((err, res) => {
             expect(res.header.location).to.equal('/auth/');
             done();
-            exit();
         })
+    })
+
+    it('should search', function(done){
+        request({
+            method: 'GET',
+            url: 'http://localhost:3000/search?q=thoi+trang'
+        }, (err, res, body) => {
+        
+            if (err) return console.error(err);
+        
+            let $ = cheerio.load(body);
+        
+            expect($('a.text-dark').text().includes('Đầm dạ hội')).to.equal(true);
+            done();
+        });
+    });
+
+    after(() => {
+        exit();
     })
 });

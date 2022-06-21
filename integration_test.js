@@ -62,20 +62,67 @@ describe('Our application', function() {
         })
     })
 
-    it('should delete product', async function() {
-        var proBefore = await productModel.findAll();
-        console.log(proBefore.length)
-        var req = request(app).post(`/admin/product/del/${proBefore[0].ProID}`);
+    // it('should delete product', async function() {
+    //     var proBefore = await productModel.findAll();
+    //     console.log(proBefore.length)
+    //     var req = request(app).post(`/admin/product/del/${proBefore[0].ProID}`);
+    //     req.cookies = Cookies;
+    //     req.set('Accept','application/json')
+    //     .end(async (err, res) => {
+    //         var proAfter = await productModel.findAll();
+    //         console.log(proAfter.length);
+
+    //         expect(proBefore.length).to.equal(proAfter.length + 1);
+    //         done();
+    //         exit();
+    //     })
+    // })
+
+    function checkWatchlistFalse(done) {
+        var req = request(app).get('/watchlist/check/14');
         req.cookies = Cookies;
         req.set('Accept','application/json')
-        .end(async (err, res) => {
-            var proAfter = await productModel.findAll();
-            console.log(proAfter.length);
-
-            expect(proBefore.length).to.equal(proAfter.length + 1);
+        .end((err, res) => {
+            expect(res.body).to.equal(false);
             done();
-            exit();
         })
+    }
+    function checkWatchlistTrue(done) {
+        var req = request(app).get('/watchlist/check/14');
+        req.cookies = Cookies;
+        req.set('Accept','application/json')
+        .end((err, res) => {
+            expect(res.body).to.equal(true);
+            done();
+        })
+    }
+
+    it('should not see in watchlist', checkWatchlistFalse);
+
+    it('should add to watchlist', function(done) {
+        var req = request(app).put('/watchlist/add');
+        req.cookies = Cookies;
+        req.set('Accept','application/json').send({id: 14})
+        .end((err, res) => {
+            done();
+        })
+    });
+
+    it('should see in watchlist', checkWatchlistTrue);
+
+    it('should delete in watchlist', function(done) {
+        var req = request(app).put('/watchlist/del');
+        req.cookies = Cookies;
+        req.set('Accept','application/json').send({id: 14})
+        .end((err, res) => {
+            done();
+        })
+    });
+
+    it('should not see in watchlist', checkWatchlistFalse);
+    
+    after(() => {
+        exit();
     })
 
 });
