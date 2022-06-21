@@ -1,6 +1,5 @@
 import { engine } from 'express-handlebars';
 import hbs_sections from 'express-handlebars-sections';
-import numeral from 'numeral'
 import moment from "moment";
 
 export default function (app) {
@@ -10,7 +9,7 @@ export default function (app) {
         section: hbs_sections(),
         helpers: {
             format_number(val) {
-                return numeral(val).format('0,0') + ' VND';
+                return val + ' VND';
             },
             format_date(val) {
                 return moment(val).format('ll');
