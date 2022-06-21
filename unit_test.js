@@ -6,12 +6,8 @@ import sessionMdware from "./middleware/session.mdware.js";
 import flash from 'express-flash';
 import chai from 'chai';
 const expect = chai.expect;
-<<<<<<< HEAD
 import supertest from 'supertest';
 import { doesNotMatch } from 'assert';
-=======
-import request from 'supertest';
->>>>>>> f080fd011b0b271af04434d04e1fa52fa52bff0e
 import { exit } from 'process';
 import  request  from 'request';
 import cheerio from 'cheerio';
