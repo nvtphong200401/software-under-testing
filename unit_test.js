@@ -81,7 +81,7 @@ describe('Our application', function() {
         });
     });
 
-    after(() => {
-        exit();
-    })
+    // after(() => {
+    //     exit();
+    // })
 });
