@@ -1,7 +1,7 @@
-import express from "express";
-import fs from 'fs';
-import moment from "moment";
-import multer from "multer";
+import express from 'express';
+import fs from  'fs';
+import moment from 'moment';
+import multer from 'multer';
 import nodemailer from 'nodemailer';
 
 import productModel from "../models/product.model.js";
