@@ -121,8 +121,8 @@ describe('Our application', function() {
 
     it('should not see in watchlist', checkWatchlistFalse);
     
-    // after(() => {
-    //     exit();
-    // })
+    after(() => {
+        exit();
+    })
 
 });
