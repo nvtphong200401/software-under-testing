@@ -19,7 +19,5 @@ localMdware(app);
 viewMdware(app);
 routesMdware(app);
 
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Listening on port http://localhost:${port}`);
-})
+const port = 3306;
+app.listen(process.env.PORT || 5000);
