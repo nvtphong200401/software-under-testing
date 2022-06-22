@@ -11,6 +11,7 @@ import { doesNotMatch } from 'assert';
 import { exit } from 'process';
 import  request  from 'request';
 import cheerio from 'cheerio';
+import { createServer } from 'http';
 
 
 const app = express();
@@ -27,9 +28,14 @@ viewMdware(app);
 routesMdware(app);
 
 const port = 3000;
+// const server = createServer(app).listen(port);
+
 const server = app.listen(port, () => {
     console.log(`Listening on port http://localhost:${port}`);
 });
+
+server.setTimeout(1000);
+
 describe('Our application', function() {
 
     it('should see home page', function(done) {
@@ -49,7 +55,7 @@ describe('Our application', function() {
         .expect(302)
         .end((err, res) => {
             expect(res.header.location).to.equal('/auth/');
-            done()
+            done();
         })
     })
 
@@ -77,8 +83,11 @@ describe('Our application', function() {
             done();
         });
     });
-
-    after(() => {
-        exit();
-    })
+    // after((done) => {
+    //     server.close();
+    //     done();
+    // });
+}).afterAll((done) => {
+    server.close();
+    done();
 });
