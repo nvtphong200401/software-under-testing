@@ -83,10 +83,6 @@ describe('Our application', function() {
             done();
         });
     });
-    // after((done) => {
-    //     server.close();
-    //     done();
-    // });
 }).afterAll((done) => {
     server.close();
     done();
