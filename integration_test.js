@@ -62,21 +62,20 @@ describe('Our application', function() {
         })
     })
 
-    // it('should delete product', async function() {
-    //     var proBefore = await productModel.findAll();
-    //     console.log(proBefore.length)
-    //     var req = request(app).post(`/admin/product/del/${proBefore[0].ProID}`);
-    //     req.cookies = Cookies;
-    //     req.set('Accept','application/json')
-    //     .end(async (err, res) => {
-    //         var proAfter = await productModel.findAll();
-    //         console.log(proAfter.length);
+    it('should delete product', async function() {
+        var proBefore = await productModel.findAll();
+        console.log(proBefore.length)
+        var req = request(app).post(`/admin/product/del/${proBefore[0].ProID}`);
+        req.cookies = Cookies;
+        req.set('Accept','application/json')
+        .end(async (err, res) => {
+            var proAfter = await productModel.findAll();
+            console.log(proAfter.length);
 
-    //         expect(proBefore.length).to.equal(proAfter.length + 1);
-    //         done();
-    //         exit();
-    //     })
-    // })
+            expect(proBefore.length).to.equal(proAfter.length + 1);
+            done();
+        })
+    })
 
     function checkWatchlistFalse(done) {
         var req = request(app).get('/watchlist/check/14');
