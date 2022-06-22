@@ -70,7 +70,6 @@ describe('Our application', function() {
         req.set('Accept','application/json')
         .end(async (err, res) => {
             var proAfter = await productModel.findAll();
-            console.log(proAfter.length);
 
             expect(proBefore.length).to.equal(proAfter.length + 1);
             done();

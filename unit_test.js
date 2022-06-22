@@ -27,9 +27,6 @@ viewMdware(app);
 routesMdware(app);
 
 const port = 3000;
-// app.set('port', port);
-// const server = http.createServer(app);
-// server.listen(port);
 const server = app.listen(port, () => {
     console.log(`Listening on port http://localhost:${port}`);
 });
