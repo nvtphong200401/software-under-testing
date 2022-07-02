@@ -48,5 +48,4 @@ router.put('/del', async function (req, res) {
     cartModel.del(req.session.cart, +req.body.id);
     res.redirect(req.headers.referer);
 });
-
 export default router;
