@@ -49,5 +49,4 @@ router.put('/del', async function (req, res) {
     res.redirect(req.headers.referer);
 });
 
-
 export default router;
