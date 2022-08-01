@@ -69,7 +69,6 @@ describe('Our application', function() {
             method: 'GET',
             url: 'http://localhost:3000/search?q=thoi+trang'
         }, (err, res, body) => {
-            
             if (err) return console.error(err);
         
             let $ = cheerio.load(body);
