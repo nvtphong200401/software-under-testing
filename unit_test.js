@@ -64,6 +64,7 @@ describe('Our application', function() {
             done();
         })
     })
+    
     it('should search', function(done){
         request({
             method: 'GET',
