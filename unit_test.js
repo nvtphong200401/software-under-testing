@@ -54,7 +54,6 @@ describe('Our application', function() {
             done()
         })
     })
-
     it('seller should be redirect', function(done) {
         supertest(app)
         .get('/seller/')
@@ -64,6 +63,7 @@ describe('Our application', function() {
             done();
         })
     })
+
     it('should search', function(done){
         request({
             method: 'GET',
