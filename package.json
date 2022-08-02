@@ -5,8 +5,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "node ./node_modules/jest/bin/jest.js --coverage",
     "start": "node app",
+    "unit_test": "mocha unit_test --exit",
+    "integration_test": "mocha integration_test --exit",
     "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
     "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;"
   },
@@ -24,6 +25,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bootstrap-fileinput": "^5.2.6",
+    "cheerio": "^1.0.0-rc.11",
     "express": "^4.17.1",
     "express-flash": "^0.0.2",
     "express-handlebars": "^6.0.1",
@@ -32,6 +34,7 @@
     "express-pg-session": "^1.1.0",
     "express-session": "^1.17.2",
     "knex": "^0.95.14",
+    "mocha": "^10.0.0",
     "moment": "^2.29.1",
     "mongoose": "^6.0.14",
     "multer": "^1.4.4",
@@ -45,14 +48,13 @@
     "passport-google-oauth2": "^0.2.0",
     "pg": "^8.7.1",
     "rand-token": "^1.0.1",
+    "request": "^2.88.2",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "chai": "^4.3.6",
     "express-session": "^1.17.2",
     "jest": "^28.1.1",
-    "multer": "^1.4.4",
-    "numeral": "^2.0.6",
     "supertest": "^6.2.3"
   }
 }
