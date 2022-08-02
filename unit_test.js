@@ -79,6 +79,6 @@ describe('Our application', function() {
     });
 
     after(() => {
-        exit();
+        server.close();
     })
 });

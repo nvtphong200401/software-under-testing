@@ -20,4 +20,4 @@ viewMdware(app);
 routesMdware(app);
 
 const port = 3306;
-app.listen(process.env.PORT || 5000);
+app.listen(3000);
