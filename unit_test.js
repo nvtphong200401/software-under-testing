@@ -75,7 +75,7 @@ describe('Our application', function() {
         
             let $ = cheerio.load(body);
         
-            expect($('a.text-dark').text().includes('Đầm dạ hội')).to.equal(true);
+            expect($('a.text-dark').text().includes('Phong dz')).to.equal(true);
             done();
         });
     });
