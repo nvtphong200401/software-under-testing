@@ -44,7 +44,6 @@ describe('Our application', function() {
         .expect(404)
         .end((err, res) => done())
     })
-
     it('admin should be redirect', function(done) {
         supertest(app)
         .get('/admin/product')
@@ -54,7 +53,6 @@ describe('Our application', function() {
             done()
         })
     })
-
     it('seller should be redirect', function(done) {
         supertest(app)
         .get('/seller/')
@@ -70,7 +68,7 @@ describe('Our application', function() {
             method: 'GET',
             url: 'http://localhost:3000/search?q=thoi+trang'
         }, (err, res, body) => {
-        
+            
             if (err) return console.error(err);
         
             let $ = cheerio.load(body);

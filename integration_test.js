@@ -109,7 +109,7 @@ describe('Our application', function() {
     });
 
     it('should see in watchlist', checkWatchlistTrue);
-
+    
     it('should delete in watchlist', function(done) {
         var req = request(app).put('/watchlist/del');
         req.cookies = Cookies;
