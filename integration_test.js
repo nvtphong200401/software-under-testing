@@ -92,7 +92,7 @@ describe('Our application', function() {
         req.cookies = Cookies;
         req.set('Accept','application/json')
         .end((err, res) => {
-            expect(res.body).to.equal(true);
+            expect(res.body).to.equal(false);
             done();
         })
     }
