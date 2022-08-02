@@ -80,5 +80,6 @@ describe('Our application', function() {
 
     after(() => {
         server.close();
+        
     })
 });
